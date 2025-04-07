@@ -8,43 +8,28 @@ Route::get('/', function () {
     return view('homeuser');
 });
 
-// Rota para exibir o formulário de criação de despesa
-Route::get('/despesas/criar', [DespesaController::class, 'create'])->name('despesas.create');
+// 🔹 Rotas de Usuário
+Route::prefix('user')->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('user.index');
+    Route::get('/list', [UserController::class, 'list'])->name('user.list'); // Rota de listagem de usuários
+    Route::get('/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/', [UserController::class, 'store'])->name('user.store');
+    Route::get('/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/{user}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+});
 
-// Rota para exibir as despesas (com filtro opcional por usuário)
-Route::get('/despesas', [DespesaController::class, 'index'])->name('despesas.index');
-
-// Rota para salvar uma nova despesa
-Route::post('/despesas/salvar', [DespesaController::class, 'store'])->name('despesas.salvar');
-
-// Rota para listar todas as despesas cadastradas
-Route::get('/despesas/listar', [DespesaController::class, 'list'])->name('despesas.listar');
-
-// Rota para editar todas as despesas cadastradas
-Route::get('/despesas/{id}/edit', [DespesaController::class, 'edit'])->name('despesas.edit');
-
-Route::put('/despesas/{despesa}/update', [DespesaController::class, 'update'])->name('despesas.update');
-
-// Rota para deletar a despesa cadastrada
-Route::delete('/despesas/{despesa}', [DespesaController::class, 'destroy'])->name('despesas.destroy');
-
-// Rota para calcular a diferença entre o salário e as despesas
-Route::post('/despesas/calcular', [DespesaController::class, 'calcular'])->name('despesas.calcular');
-
-Route::get('/user', [UserController::class, 'index'])->name('user.index');
-
-Route::get('/user/list', [UserController::class, 'list'])->name('user.list');
-
-Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
-
-Route::post('/user', [UserController::class, 'store'])->name('user.store');
-
-Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('user.destroy');
-
-Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
-Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
-
+// 🔹 Rota para envio de e-mails (se necessário)
 Route::post('/email', [UserController::class, 'store'])->name('email.store');
 
-// Nova rota não é mais necessária, pois index aceitará o filtro por usuário
-// Route::get('/user/{id}/despesas', [DespesaController::class, 'despesasPorUsuario'])->name('user.despesas');
+// 🔹 Rotas de Despesas
+Route::prefix('despesas')->group(function () {
+    Route::get('/', [DespesaController::class, 'index'])->name('despesas.index');
+    Route::get('/criar', [DespesaController::class, 'create'])->name('despesas.create');
+    Route::post('/salvar', [DespesaController::class, 'store'])->name('despesas.salvar');
+    Route::get('/listar', [DespesaController::class, 'list'])->name('despesas.listar');
+    Route::get('/{id}/edit', [DespesaController::class, 'edit'])->name('despesas.edit');
+    Route::put('/{id}/update', [DespesaController::class, 'update'])->name('despesas.update');
+    Route::delete('/{id}', [DespesaController::class, 'destroy'])->name('despesas.destroy');
+    Route::post('/calcular', [DespesaController::class, 'calcular'])->name('despesas.calcular');
+});

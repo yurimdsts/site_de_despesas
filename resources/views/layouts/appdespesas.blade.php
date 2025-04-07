@@ -10,7 +10,7 @@
     <header class="p-3 bg-dark text-white">
         <nav class="container">
             <a href="{{ url('/') }}" class="text-white">Início</a> |
-            <a href="{{ route('despesas.index') }}" class="text-white">Cadastrar</a> |
+            <a href="{{ route('despesas.create') }}" class="text-white">Cadastrar</a> |
             <a href="{{ route('despesas.listar') }}" class="text-white">Listar Despesas</a>
         </nav>
     </header>

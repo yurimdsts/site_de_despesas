@@ -14,14 +14,15 @@ class DespesaController extends Controller
      */
     public function index(Request $request)
     {
-        $usuarios = User::all();
-        $userId = $request->input('user_id');
+        $users = User::all(); // Carrega todos os usuários para o filtro
+        $userId = $request->input('user_id'); // Obtém o ID do usuário da query string
 
+        // Filtra as despesas com base no user_id, se fornecido
         $despesas = Despesa::when($userId, function ($query) use ($userId) {
             return $query->where('user_id', $userId);
         })->get();
 
-        return view('despesas.index', compact('despesas', 'usuarios'));
+        return view('despesas.index', compact('despesas', 'users')); // Passa as despesas e os usuários para a view
     }
 
     /**
@@ -29,8 +30,8 @@ class DespesaController extends Controller
      */
     public function create()
     {
-        $usuarios = User::all();
-        return view('despesas.create', compact('usuarios'));
+        $users = User::all();
+        return view('despesas.create', compact('users'));
     }
 
     /**
@@ -65,8 +66,8 @@ class DespesaController extends Controller
      */
     public function edit(Despesa $despesa)
     {
-        $usuarios = User::all();
-        return view('despesas.edit', compact('despesa', 'usuarios'));
+        $users = User::all();
+        return view('despesas.edit', compact('despesa', 'users'));
     }
 
     /**
@@ -110,14 +111,5 @@ class DespesaController extends Controller
         $diferenca = $request->salario - $totalDespesas;
 
         return view('despesas.result', compact('diferenca', 'totalDespesas'));
-    }
-
-    /**
-     * Exibe despesas de um usuário específico (não mais necessário com filtro, mas pode ser mantido).
-     */
-    public function despesasPorUsuario($id)
-    {
-        $user = User::with('despesas')->findOrFail($id);
-        return view('despesas.usuario', compact('user'));
     }
 }
