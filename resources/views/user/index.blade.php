@@ -30,6 +30,7 @@
                                 @method('DELETE')
                                 <button type="submit" onclick="return confirm('Tem certeza?')" class="text-red-500">Excluir</button>
                             </form>
+                            <a href="{{ route('user.despesas', $user->id) }}">Ver Despesas</a> <!-- Novo botão -->
                         </td>
                     </tr>
                 @endforeach

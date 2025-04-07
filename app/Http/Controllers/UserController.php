@@ -5,64 +5,71 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate(10); // Paginação de 10 usuários por página
         return view('user.index', compact('users'));
     }
 
     public function store(Request $request)
     {
-        // Validação dos dados
-        $request->validate([
-            'name' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'name'  => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            // 'password' => 'required|string|min:6|confirmed',
         ]);
 
         // Criar o usuário com a senha criptografada
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $validatedData['name'],
+            'email'    => $validatedData['email'],
             'password' => Hash::make('123'),
         ]);
 
-        return redirect()->route('user.index')->with('success', 'Usuário cadastrado com sucesso!');
+        return $this->redirectSuccess('Usuário cadastrado com sucesso!');
     }
 
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = User::findOrFail($id);
         return view('user.edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+        $validatedData = $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => [
+                'required', 
+                'string', 
+                'email', 
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
         ]);
 
-        $user = User::findOrFail($id);
-        $user->update($request->only(['name', 'email']));
+        $user->update($validatedData);
 
-        return redirect()->route('user.index')->with('success', 'Usuário atualizado com sucesso!');
+        return $this->redirectSuccess('Usuário atualizado com sucesso!');
     }
 
     public function list()
     {
-        $users = User::all();
+        $users = User::paginate(10); // Melhor paginar os usuários para evitar sobrecarga
         return view('user.list', compact('users'));
     }
 
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->route('user.index')->with('success', 'Usuário excluído com sucesso!');
+        return $this->redirectSuccess('Usuário excluído com sucesso!');
+    }
+
+    private function redirectSuccess($message)
+    {
+        return redirect()->route('user.index')->with('success', $message);
     }
 }

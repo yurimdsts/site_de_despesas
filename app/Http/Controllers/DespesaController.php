@@ -3,19 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Despesa;
+use App\Models\User;
 use App\Http\Requests\CreateDespesa;
 use Illuminate\Http\Request;
 
 class DespesaController extends Controller
 {
     /**
-     * Exibe a listagem de todas as despesas.
+     * Exibe a listagem de todas as despesas ou filtradas por usuário.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $despesas = Despesa::all();
-        //dd($despesas);
-        return view('despesas.index', compact('despesas'));
+        $usuarios = User::all();
+        $userId = $request->input('user_id');
+
+        $despesas = Despesa::when($userId, function ($query) use ($userId) {
+            return $query->where('user_id', $userId);
+        })->get();
+
+        return view('despesas.index', compact('despesas', 'usuarios'));
     }
 
     /**
@@ -23,7 +29,8 @@ class DespesaController extends Controller
      */
     public function create()
     {
-        return view('despesas.create');
+        $usuarios = User::all();
+        return view('despesas.create', compact('usuarios'));
     }
 
     /**
@@ -31,19 +38,20 @@ class DespesaController extends Controller
      */
     public function store(CreateDespesa $request)
     {
-        // $despesa = new Despesa;
-        // $despesa->valor = $request->get('valor');
-        // $despesa->save();
         Despesa::create($request->validated());
 
         return redirect()->route('despesas.index')->with('success', 'Despesa cadastrada com sucesso!');
     }
 
+    /**
+     * Lista todas as despesas (usada em /despesas/listar).
+     */
     public function list()
     {
         $despesas = Despesa::all();
-    return view('despesas.list', compact('despesas'));
+        return view('despesas.list', compact('despesas'));
     }
+
     /**
      * Exibe os detalhes de uma despesa específica.
      */
@@ -57,33 +65,34 @@ class DespesaController extends Controller
      */
     public function edit(Despesa $despesa)
     {
-        return view('despesas.edit', compact('despesa'));
+        $usuarios = User::all();
+        return view('despesas.edit', compact('despesa', 'usuarios'));
     }
 
     /**
      * Atualiza uma despesa no banco de dados.
      */
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'descricao' => 'required|string|max:255',
-        'tipo' => 'required|in:Casa,Carro,Contas,Outros',
-        'valor' => 'required|numeric|min:0',
-        'data' => 'required|date',
-    ]);
+    {
+        $request->validate([
+            'descricao' => 'required|string|max:255',
+            'tipo' => 'required|in:Casa,Carro,Contas,Outros',
+            'valor' => 'required|numeric|min:0',
+            'data' => 'required|date',
+            'user_id' => 'required|exists:users,id',
+        ]);
 
-    $despesa = Despesa::findOrFail($id);
-    $despesa->update($request->all());
+        $despesa = Despesa::findOrFail($id);
+        $despesa->update($request->all());
 
-    return redirect()->route('despesas.index')->with('success', 'Despesa atualizada com sucesso!');
-}
+        return redirect()->route('despesas.index')->with('success', 'Despesa atualizada com sucesso!');
+    }
 
     /**
      * Remove uma despesa do banco de dados.
      */
     public function destroy(Despesa $despesa)
     {
-        //dd($despesa->id);
         $despesa->delete();
         return redirect()->route('despesas.index')->with('success', 'Despesa removida com sucesso!');
     }
@@ -101,5 +110,14 @@ class DespesaController extends Controller
         $diferenca = $request->salario - $totalDespesas;
 
         return view('despesas.result', compact('diferenca', 'totalDespesas'));
+    }
+
+    /**
+     * Exibe despesas de um usuário específico (não mais necessário com filtro, mas pode ser mantido).
+     */
+    public function despesasPorUsuario($id)
+    {
+        $user = User::with('despesas')->findOrFail($id);
+        return view('despesas.usuario', compact('user'));
     }
 }

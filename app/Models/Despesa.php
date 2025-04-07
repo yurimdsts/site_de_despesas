@@ -2,13 +2,27 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Despesa extends Model
 {
-    // Define o nome da tabela no banco de dados
+    use HasFactory;
+
+    // Define o nome da tabela no banco de dados (caso necessário)
     protected $table = 'despesas';
 
-    // Define os campos que podem ser preenchidos em massa
-    protected $fillable = ['descricao', 'tipo', 'valor', 'data'];
+    // Campos permitidos para preenchimento em massa
+    protected $fillable = ['descricao', 'tipo', 'valor', 'data', 'user_id'];
+
+    // Caso a tabela não tenha os campos created_at e updated_at, desative timestamps:
+    public $timestamps = false;
+
+    /**
+     * Relacionamento: uma despesa pertence a um usuário.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
