@@ -1,4 +1,4 @@
-@extends('layouts.appdespesas')
+@extends('layouts.app')
 
 @section('content')
     <h1>Resultado do Cálculo</h1>

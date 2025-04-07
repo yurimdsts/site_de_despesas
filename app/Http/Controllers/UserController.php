@@ -15,6 +15,11 @@ class UserController extends Controller
         return view('user.index', compact('users'));
     }
 
+    public function create()
+    {
+        return view('user.create');  // Retorna a view com o formulário de criação
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -58,7 +63,7 @@ class UserController extends Controller
     public function list()
     {
         $users = User::paginate(10); // Melhor paginar os usuários para evitar sobrecarga
-        return view('user.list', compact('users'));
+        return view('user.index', compact('users'));
     }
 
     public function destroy(User $user)

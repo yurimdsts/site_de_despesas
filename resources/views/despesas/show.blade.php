@@ -1,4 +1,4 @@
-@extends('layouts.appdespesas')
+@extends('layouts.app')
 
 @section('content')
     <h1>Detalhes da Despesa</h1>

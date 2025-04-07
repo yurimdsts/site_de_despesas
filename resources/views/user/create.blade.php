@@ -1,4 +1,4 @@
-@extends('layouts.appuser')
+@extends('layouts.app')
 
 @section('content')
     <h1>Cadastro de Usuário</h1>
@@ -23,7 +23,6 @@
 
     <form action="{{ route('user.store') }}" method="POST">
         @csrf
-yjedtyjrtey
         <label for="name">Nome:</label>
         <input type="text" id="name" name="name" value="{{ old('name') }}" required aria-describedby="nameHelp">
         <small id="nameHelp">Digite seu nome completo.</small>
@@ -33,9 +32,6 @@ yjedtyjrtey
         <input type="email" id="email" name="email" value="{{ old('email') }}" required aria-describedby="emailHelp">
         <small id="emailHelp">Digite um e-mail válido.</small>
         <br><br>
-
-        <input type="password" name="password" placeholder="Senha" required>
-        <input type="password" name="password_confirmation" placeholder="Confirme a Senha" required>
         
         <button type="submit">Cadastrar Usuário</button>
     </form>

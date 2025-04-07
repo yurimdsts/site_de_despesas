@@ -1,4 +1,4 @@
-@extends('layouts.appdespesas')
+@extends('layouts.app')
 
 @section('content')
     <h1>Despesas</h1>
@@ -16,7 +16,7 @@
         <button type="submit">Filtrar</button>
     </form>
 
-    <table border="1" cellpadding="10">
+    <table border="1" cellpadding="10" class="table table-bordered mt-3">
         <thead>
             <tr>
                 <th>Descrição</th>
@@ -33,11 +33,11 @@
                     <td>{{ $despesa->descricao }}</td>
                     <td>{{ $despesa->tipo }}</td>
                     <td>{{ $despesa->valor }}</td>
-                    <td>{{ $despesa->data }}</td>
+                    <td>{{ \Carbon\Carbon::parse($despesa->data)->format('d/m/Y') }}</td>
                     <td>{{ $despesa->user->name ?? 'N/A' }}</td>
                     <td>
                         <a href="{{ route('despesas.edit', $despesa->id) }}">Editar</a>
-                        <form action="{{ route('despesas.destroy', $despesa->id) }}" method="POST" style="display:inline">
+                        <form action="{{ route('despesas.destroy', $despesa->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" onclick="return confirm('Tem certeza que deseja excluir esta despesa?')">Excluir</button>
@@ -51,4 +51,14 @@
             @endforelse
         </tbody>
     </table>
+
+    <!-- Botão para cadastrar nova despesa, agora posicionado abaixo da tabela -->
+    <a href="{{ route('despesas.create') }}" class="btn btn-primary mt-3">Cadastrar Nova Despesa</a>
+
+       <!-- Exibe a soma das despesas -->
+       <div class="mt-3">
+        <strong>Total de Despesas: </strong> 
+        {{ number_format($despesas->sum('valor'), 2, ',', '.') }}
+    </div>
 @endsection
+

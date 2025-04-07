@@ -1,4 +1,4 @@
-@extends('layouts.appdespesas')
+@extends('layouts.app')
 
 @section('content')
     <h1>Excluir Despesa</h1>
@@ -12,10 +12,10 @@
         <li><strong>Data:</strong> {{ \Carbon\Carbon::parse($despesa->data)->format('d/m/Y') }}</li>
     </ul>
 
-    <form action="{{ route('despesas.destroy', $despesa->id) }}">
+    <form action="{{ route('despesas.destroy', $despesa->id) }}" method="POST">
         @csrf
         @method('DELETE')
         <button type="submit">Excluir</button>
         <a href="{{ route('despesas.index') }}">Cancelar</a>
-    </form>
+    </form>    
 @endsection

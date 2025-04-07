@@ -5,7 +5,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('homeuser');
+    return view('home');
 });
 
 // 🔹 Rotas de Usuário
@@ -28,8 +28,8 @@ Route::prefix('despesas')->group(function () {
     Route::get('/criar', [DespesaController::class, 'create'])->name('despesas.create');
     Route::post('/salvar', [DespesaController::class, 'store'])->name('despesas.salvar');
     Route::get('/listar', [DespesaController::class, 'list'])->name('despesas.listar');
-    Route::get('/{id}/edit', [DespesaController::class, 'edit'])->name('despesas.edit');
-    Route::put('/{id}/update', [DespesaController::class, 'update'])->name('despesas.update');
-    Route::delete('/{id}', [DespesaController::class, 'destroy'])->name('despesas.destroy');
+    Route::get('/{despesa}/edit', [DespesaController::class, 'edit'])->name('despesas.edit');
+    Route::put('/{despesa}/update', [DespesaController::class, 'update'])->name('despesas.update');
+    Route::delete('/{despesa}', [DespesaController::class, 'destroy'])->name('despesas.destroy');
     Route::post('/calcular', [DespesaController::class, 'calcular'])->name('despesas.calcular');
 });

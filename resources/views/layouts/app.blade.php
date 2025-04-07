@@ -35,14 +35,32 @@
         .container {
             margin-top: 20px;
         }
+
+        /* Estilo para o botão de início */
+        .btn-inicio {
+            background-color: #007bff; /* Cor de fundo azul */
+            color: #fff; /* Cor do texto */
+            padding: 10px 20px; /* Tamanho do botão */
+            border-radius: 5px; /* Bordas arredondadas */
+            text-decoration: none; /* Remove o sublinhado */
+            transition: background-color 0.3s ease; /* Transição suave ao passar o mouse */
+        }
+
+        .btn-inicio:hover {
+            background-color: #0056b3; /* Cor de fundo ao passar o mouse */
+        }
+
+        .btn-inicio:focus {
+            outline: none; /* Remove a borda ao focar */
+            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5); /* Sombra ao focar */
+        }
     </style>
 </head>
 <body>
     <header class="p-3 text-white">
         <nav class="container">
-            <a href="{{ url('/') }}" class="text-white">Início</a> |
-            <a href="{{ route('user.index') }}" class="text-white">Cadastrar</a> |
-            <a href="{{ route('user.list') }}" class="text-white">Listar Usuários</a>
+            <!-- Link "Início" estilizado como botão -->
+            <a href="{{ url('/') }}" class="btn-inicio">Início</a>
         </nav>
     </header>
 

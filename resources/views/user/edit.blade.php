@@ -1,4 +1,4 @@
-@extends('layouts.appuser')
+@extends('layouts.app')
 
 @section('content')
     <h1>Editar Usuário</h1>

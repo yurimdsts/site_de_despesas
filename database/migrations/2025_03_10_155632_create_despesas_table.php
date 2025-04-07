@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum("tipo", ["Casa", "Carro", "Contas", "Outros"]);
             $table->decimal("valor", 10, 2);
             $table->date("data");
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Adiciona o relacionamento com a tabela users
             $table->timestamps();
         });
     }
